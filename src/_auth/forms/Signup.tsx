@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -14,6 +15,7 @@ import { createUserAccount } from '@/lib/appwrite/api';
 
 const Signup = () => {
 
+  const { toast } = useToast()
   const isLoading = false;
 
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -31,6 +33,12 @@ const Signup = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     const newUser = await createUserAccount(values);
+
+    if(!newUser) {
+      return toast({
+        title: "Signup Failed !",
+      })
+    }
     console.log(newUser)
   }
 
